@@ -49,22 +49,21 @@
             <span class="ml-3">Play Trailer</span>
           </a>
           <a
-            href="#"
-            v-show="!isFavourite"
-            @click="addToLocalStorage"
-            class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
-          >
-            <img src="@/assets/images/heart-white.png" alt="" />
-            <span class="ml-3">Add to favourites</span>
-          </a>
-          <a
-            href="#"
-            v-show="isFavourite"
-            @click="removeFromLocalStorage"
+            href="#here"
+            @click="favouriteBtn()"
+            onclick="window.location.reload();"
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
             <img src="@/assets/images/heart-red.png" alt="" />
-            <span class="ml-3">Remove from favourites</span>
+            <span class="ml-3"> {{ isFavourite }}</span>
+          </a>
+          <a
+            href="#"
+            @click="removeFromLocalStorage()"
+            class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
+          >
+            <img src="@/assets/images/heart-red.png" alt="" />
+            <span class="ml-3"> Remove </span>
           </a>
         </div>
       </div>
@@ -97,14 +96,11 @@ export default {
           backdrops: {},
         },
       },
-      favorites: JSON.parse(localStorage.getItem("favmovies")) ?? [],
       modelOpen: false,
       isVideo: false,
-      mediaURL: "",
-      isFavourite: JSON.parse(localStorage.getItem("favmovies")).some(item => item === this.$route.params.id)
+      mediaURL: ""
     };
   },
-
   watch: {
     "$route.params.id": {
       handler() {
@@ -142,21 +138,36 @@ export default {
       const favmovie = JSON.parse(localStorage.getItem("favmovies")) || [];
       favmovie.push(this.movie.id);
       localStorage.setItem("favmovies", JSON.stringify(favmovie));
-      this.isFavourite = true;
     },
     removeFromLocalStorage(){
       const favmovie = JSON.parse(localStorage.getItem("favmovies")) || [];
       const index = favmovie.findIndex(item => item === this.movie.id);
-      if (index !== -1) favmovie.splice(index, this.movie.id)
+      if (index !== -1) favmovie.splice(index, 1)
       localStorage.setItem("favmovies", JSON.stringify(favmovie));
-      this.isFavourite = false;
-      console.log(favmovie.length)
+    },
+    favouriteBtn(){
+      if (this.isFavourite) {
+        this.removeFromLocalStorage()
+        } else {
+          this.addToLocalStorage()
+        }
+    },
+    buttonText(){
+      if (this.isFavourite) {
+        return "Remove from favourites"
+        } else {
+          return "Add to favourites"
+        }
     },
   },
   computed: {
     posterPath() {
       return "https://image.tmdb.org/t/p/w500/" + this.movie.poster_path;
     },
+    isFavourite() {
+      return JSON.parse(localStorage.getItem("favmovies")).some(item => item === this.movie.id);
+    }
+
   },
 };
 </script>
