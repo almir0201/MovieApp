@@ -51,7 +51,6 @@
           <a
             href="#here"
             @click="favouriteBtn()"
-            onclick="window.location.reload();"
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
             <img src="@/assets/images/heart-red.png" alt="" />

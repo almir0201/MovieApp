@@ -1,19 +1,10 @@
 <template>
-  <div class="mx-5">
+  <div class="container mx-auto">
       <h2 class="uppercase mt-5 text-yellow-500 text-lg font-semibold pb-2">
         Favourite Movies
       </h2>
-      <a
-        href="#"
-        @click="fetchFavmovies()"
-        class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
-        >
-        <img src="@/assets/images/heart-red.png" alt="" />
-        <span class="ml-3"> Remove </span>
-      </a>
-
       <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <MovieItem :key="favmovie" v-for="favmovie in favmovie" :movie="movie" :genres="genres"/>
+        <MovieItem :key="movie.id" v-for="movie in favmovies" :movie="movie" :genres="genres"/>
       </div>
   </div>
 </template>
@@ -29,16 +20,20 @@ export default {
     return {
       favmovie: [],
       genres: [],
-      movies: [],
+      favmovies: [],
     };
   },
 
     async mounted() {
       this.fetchGenres();
       try {
-        const token = "fd2f21d28e9b0f2d3c1fd34f9e250c87";
-        const response = await this.$http.get(`/movie/popular?api_key=${token}`);
-        this.movies = response.data.results;
+        var arrayOfValues = JSON.parse(localStorage.getItem("favmovies"));
+        arrayOfValues.forEach(async (item) => {
+          const token = "fd2f21d28e9b0f2d3c1fd34f9e250c87";
+          const response = await this.$http.get(`/movie/` + item + `?api_key=${token}`)
+          this.favmovies.push(response.data);
+          console.log(this.favmovies)
+        })
       } catch (error) {
         console.log(error);
       }
@@ -54,15 +49,6 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
-      fetchFavmovies() {
-        const favmovie = JSON.parse(localStorage.getItem("favmovies")) || [];
-        localStorage.setItem("favmovies", JSON.stringify(favmovie));
-        //const token = "fd2f21d28e9b0f2d3c1fd34f9e250c87";
-        //const response = this.$http.get(`/movie/` + favmovie `?api_key=${token}`);
-        //this.genres = response.data.genres;
-        console.log(favmovie)
-        console.log(this.movies)
     },
   }
 };
