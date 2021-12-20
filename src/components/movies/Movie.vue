@@ -51,18 +51,20 @@
           <a
             href="#here"
             @click="favouriteBtn()"
+            v-show="this.isFavourite"
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
             <img src="@/assets/images/heart-red.png" alt="" />
-            <span class="ml-3"> {{ isFavourite }}</span>
+            <span class="ml-3"> Remove from Favourites </span>
           </a>
           <a
             href="#"
-            @click="removeFromLocalStorage()"
+            @click="favouriteBtn()"
+            v-show="!this.isFavourite"
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
-            <img src="@/assets/images/heart-red.png" alt="" />
-            <span class="ml-3"> Remove </span>
+            <img src="@/assets/images/heart-white.png" alt="" />
+            <span class="ml-3"> Add to Favourites </span>
           </a>
         </div>
       </div>
@@ -97,7 +99,7 @@ export default {
       },
       modelOpen: false,
       isVideo: false,
-      mediaURL: ""
+      mediaURL: "",
     };
   },
   watch: {
@@ -114,6 +116,7 @@ export default {
       const token = "fd2f21d28e9b0f2d3c1fd34f9e250c87";
       const response = await this.$http.get("/movie/" + movieId + `?api_key=${token}&append_to_response=credits,videos,images`);
       this.movie = response.data;
+      console.log(this.buttonText)
     },
     openYouTubeModel() {
       this.mediaURL = this.youtubeVideo();
@@ -145,28 +148,27 @@ export default {
       localStorage.setItem("favmovies", JSON.stringify(favmovie));
     },
     favouriteBtn(){
-      if (this.isFavourite) {
-        this.removeFromLocalStorage()
+      this.isFavourite = JSON.parse(localStorage.getItem("favmovies")).some(item => item === this.movie.id);
+      if (!this.isFavourite) {
+        this.addToLocalStorage()
         } else {
-          this.addToLocalStorage()
+          this.removeFromLocalStorage()
         }
     },
     buttonText(){
-      if (this.isFavourite) {
-        return "Remove from favourites"
+      this.isFavourite = JSON.parse(localStorage.getItem("favmovies")).some(item => item === this.movie.id);
+      if (!this.isFavourite) {
+        return "Add to favourites"
         } else {
-          return "Add to favourites"
+          return "Remove from favourites"
         }
+
     },
   },
   computed: {
     posterPath() {
       return "https://image.tmdb.org/t/p/w500/" + this.movie.poster_path;
     },
-    isFavourite() {
-      return JSON.parse(localStorage.getItem("favmovies")).some(item => item === this.movie.id);
-    }
-
   },
 };
 </script>
