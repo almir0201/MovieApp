@@ -69,7 +69,7 @@
             @click="favouriteBtn()"
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
-            <img src="@/assets/images/heart-red.png" alt="" />
+            <img :src="heartIcon" />
             <span class="ml-3"> {{ displayText }} </span>
           </a>
         </div>
@@ -93,7 +93,6 @@
 import Cast from "./Cast";
 import Images from "./Images";
 import MediaModel from "../models/MediaModel";
-
 export default {
   components: {
     Cast,
@@ -118,6 +117,11 @@ export default {
       )
         ? "Remove from favorites"
         : "Add to Favourites",
+      heartIcon: JSON.parse(localStorage.getItem("favmovies")).some(
+        (item) => item == this.$route.params.id
+      )
+        ? require("@/assets/images/heart-red.png")
+        : require("@/assets/images/heart-white.png"),
     };
   },
   watch: {
@@ -128,7 +132,6 @@ export default {
       immediate: true,
     },
   },
-
   methods: {
     async fetchMovie(movieId) {
       const token = "fd2f21d28e9b0f2d3c1fd34f9e250c87";
@@ -177,9 +180,11 @@ export default {
       if (!this.isFavourite) {
         this.addToLocalStorage();
         this.displayText = "Remove from Favourites";
+        this.heartIcon = require("@/assets/images/heart-red.png");
       } else {
         this.removeFromLocalStorage();
         this.displayText = "Add to Favourites";
+        this.heartIcon = require("@/assets/images/heart-white.png");
       }
     },
   },
