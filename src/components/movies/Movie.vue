@@ -70,7 +70,7 @@
             class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black ml-5"
           >
             <img src="@/assets/images/heart-red.png" alt="" />
-            <span class="ml-3" > {{ displayText }} </span>
+            <span class="ml-3"> {{ displayText }} </span>
           </a>
         </div>
       </div>
@@ -113,10 +113,11 @@ export default {
       modelOpen: false,
       isVideo: false,
       mediaURL: "",
-
       displayText: JSON.parse(localStorage.getItem("favmovies")).some(
         (item) => item == this.$route.params.id
-      ) ? "Remove from favorites" : "Add to Favourites",
+      )
+        ? "Remove from favorites"
+        : "Add to Favourites",
     };
   },
   watch: {
@@ -170,37 +171,23 @@ export default {
       localStorage.setItem("favmovies", JSON.stringify(favmovie));
     },
     favouriteBtn() {
-            this.isFavourite = JSON.parse(localStorage.getItem("favmovies")).some(
+      this.isFavourite = JSON.parse(localStorage.getItem("favmovies")).some(
         (item) => item == this.$route.params.id
       );
       if (!this.isFavourite) {
         this.addToLocalStorage();
-        this.displayText = "Remove from Favourites"
+        this.displayText = "Remove from Favourites";
       } else {
         this.removeFromLocalStorage();
-        this.displayText =  "Add to Favourites"
+        this.displayText = "Add to Favourites";
       }
     },
-    buttonText(){
-      if(!this.displayText){
-        return "Add to Favourites"
-      } else {
-        return "Remove from Favourites"
-      }
-    }
   },
   computed: {
     posterPath() {
       return "https://image.tmdb.org/t/p/w500/" + this.movie.poster_path;
     },
   },
-  mounted () {
-    console.log(this.isFavourite)
-    const test = JSON.parse(localStorage.getItem("favmovies")).some(
-        (item) => item == this.$route.params.id
-      )
-    console.log(test)
-  }
 };
 </script>
 
