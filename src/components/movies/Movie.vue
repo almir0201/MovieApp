@@ -112,12 +112,12 @@ export default {
       modelOpen: false,
       isVideo: false,
       mediaURL: "",
-      displayText: JSON.parse(localStorage.getItem("favmovies")).some(
+      displayText: JSON.parse(localStorage.getItem("favmovies") || "[]").some(
         (item) => item == this.$route.params.id
       )
         ? "Remove from favorites"
         : "Add to Favourites",
-      heartIcon: JSON.parse(localStorage.getItem("favmovies")).some(
+      heartIcon: JSON.parse(localStorage.getItem("favmovies") || "[]").some(
         (item) => item == this.$route.params.id
       )
         ? require("@/assets/images/heart-red.png")
@@ -174,7 +174,7 @@ export default {
       localStorage.setItem("favmovies", JSON.stringify(favmovie));
     },
     favouriteBtn() {
-      this.isFavourite = JSON.parse(localStorage.getItem("favmovies")).some(
+      this.isFavourite = JSON.parse(localStorage.getItem("favmovies") || "[]").some(
         (item) => item == this.$route.params.id
       );
       if (!this.isFavourite) {
