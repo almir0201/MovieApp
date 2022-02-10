@@ -1,0 +1,1 @@
+# Here needs to be images that are not SVGs
